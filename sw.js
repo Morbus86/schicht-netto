@@ -1,5 +1,5 @@
 // Service Worker – Cache-first, offline-fähig. Version bei Änderungen hochzählen.
-const CACHE = "schicht-netto-v1";
+const CACHE = "schicht-netto-v2";
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", (e) => {
