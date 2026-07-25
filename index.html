@@ -6,22 +6,18 @@
 <meta name="theme-color" content="#E9ECEA">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>Schicht-Netto-Rechner</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#E9ECEA; --surface:#fff; --ink:#16211D; --muted:#5C6B64; --faint:#8A968F;
-    --line:#D8DEDA; --accent:#0E7C6B; --accentSoft:#D6E9E4; --sv:#C9873E; --steuer:#9C5A5A; --posBg:#E4F1EC; --fahrt:#3B6EA5;
-  }
+  :root{--bg:#E9ECEA;--surface:#fff;--ink:#16211D;--muted:#5C6B64;--faint:#8A968F;
+    --line:#D8DEDA;--accent:#0E7C6B;--accentSoft:#D6E9E4;--sv:#C9873E;--steuer:#9C5A5A;--posBg:#E4F1EC;--fahrt:#3B6EA5;}
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);
-    font-family:'Spline Sans',system-ui,-apple-system,Roboto,sans-serif;
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Spline Sans',system-ui,-apple-system,Roboto,sans-serif;
     padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);}
-  .mono{font-family:'JetBrains Mono',ui-monospace,'Roboto Mono',monospace}
+  .mono{font-family:'JetBrains Mono',ui-monospace,monospace}
   input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
   input[type=number]{-moz-appearance:textfield}
   .wrap{max-width:980px;margin:0 auto;padding:clamp(16px,4vw,40px)}
@@ -42,13 +38,22 @@
   input.num:focus,select.sel:focus{border-color:var(--accent)}
   .suf{position:absolute;right:12px;font-size:12px;color:var(--faint);font-family:'JetBrains Mono',monospace}
   .hint{font-size:11px;color:var(--faint);margin-top:4px}
-  .shiftrow{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line)}
-  .shiftrow .nm{font-size:14px;font-weight:600}.shiftrow .sb{font-size:11px;color:var(--faint)}
-  .cells{display:flex;gap:8px}.cells .c{text-align:center}
-  input.cell{width:52px;padding:7px 6px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:14px;
+  input.cell{width:56px;padding:7px 6px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:14px;
     color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;outline:none}
   input.cell:focus{border-color:var(--accent)}
+  input.cell.warn{border-color:var(--steuer);background:#FCF2F2}
+  /* Schichtblock */
+  .sblock{border-top:1px solid var(--line);padding:12px 0 6px}
+  .shead{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .shead .nm{font-size:15px;font-weight:600}
+  .shead .sb{font-size:11px;color:var(--faint)}
+  .shead .cw{text-align:center;flex-shrink:0}
   .clab{font-size:10px;color:var(--faint);margin-top:3px}
+  .srow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:5px 0 5px 14px;
+    border-left:2px solid var(--accentSoft);margin:6px 0 0 2px}
+  .srow .sl{font-size:12.5px;color:var(--muted);line-height:1.3}
+  .warnbox{font-size:12px;color:var(--steuer);background:#FCF2F2;border:1px solid #E8CFCF;
+    border-radius:8px;padding:8px 10px;margin-top:8px;line-height:1.4}
   .tog{display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:0;font-family:inherit}
   .sw{width:38px;height:22px;border-radius:11px;background:var(--line);position:relative;transition:background .15s;flex-shrink:0}
   .sw.on{background:var(--accent)}
@@ -84,7 +89,7 @@
   <div style="margin-bottom:20px">
     <div class="eyebrow">Schicht-Netto · BaBella-Vertrag</div>
     <h1>Was bleibt netto – mit Zuschlägen</h1>
-    <p class="lead">Netto inklusive steuerfreier Nacht-, Sonntags- und Feiertagszuschläge sowie Fahrtkostenerstattung aus deinem Vertrag. Im Vergleichsmodus stellst du zwei Gehaltsstufen gegenüber.</p>
+    <p class="lead">Netto inklusive steuerfreier Nacht-, Sonntags- und Feiertagszuschläge sowie Fahrtkostenerstattung aus deinem Vertrag.</p>
   </div>
 
   <div class="card" style="margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
@@ -94,7 +99,6 @@
   </div>
 
   <div class="grid">
-    <!-- Eingaben -->
     <div>
       <section class="card">
         <h2>Gehalt &amp; Steuer</h2>
@@ -114,7 +118,6 @@
             <label class="f"><div class="lab">Zulage</div><div class="inwrap"><input class="num" type="number" id="zulageB" step="50"><span class="suf">€</span></div></label>
           </div>
         </div>
-
         <label class="f"><div class="lab">Steuerklasse</div>
           <select class="sel" id="kls">
             <option value="1">I – ledig</option><option value="2">II – alleinerziehend</option>
@@ -132,7 +135,10 @@
 
       <section class="card" style="margin-top:16px">
         <h2>Schichten pro Monat</h2>
-        <p style="font-size:11.5px;color:var(--faint);margin:-6px 0 4px">Gesamtzahl je Art – und wie viele davon auf Sonntage (So) bzw. Feiertage (Ft) fallen.</p>
+        <p style="font-size:12px;color:var(--faint);margin:-6px 0 2px;line-height:1.45">
+          Oben die Gesamtzahl je Schichtart, darunter wie viele davon auf einen Zuschlagstag fallen.
+          <b>Feiertag, der auf einen Sonntag fällt → bei „Feiertag" eintragen</b> (100 % schlägt 50 %, es gilt nur der höchste Satz).
+        </p>
         <div id="shifts"></div>
       </section>
 
@@ -146,17 +152,15 @@
             <label class="f" style="margin-bottom:0"><div class="lab">Satz je km</div><div class="inwrap"><input class="num" type="number" id="fahrtSatz" step="0.05"><span class="suf">€</span></div></label>
             <button class="tog" id="togSteuerfrei" style="padding-bottom:10px"><span class="sw on" id="swSteuerfrei"><span class="knob"></span></span><span class="tl">steuerfrei (Reisekosten)</span></button>
           </div>
-          <p style="font-size:11.5px;color:var(--faint);margin:12px 0 2px">Einfache Strecke je Ort – Hin- und Rückweg rechnet die App automatisch. Fahrten = Anzahl deiner Einsätze dort im Monat.</p>
+          <p style="font-size:11.5px;color:var(--faint);margin:12px 0 2px">Einfache Strecke je Ort – Hin- und Rückweg rechnet die App automatisch.</p>
           <div id="routen"></div>
         </div>
       </section>
     </div>
-
-    <!-- Ergebnis -->
     <div id="erg"></div>
   </div>
 
-  <p class="foot">Schätzung nach Tarif 2026 (§32a EStG), SV-Sätzen 2026 und Vertrag §3 (Zuschläge 25/40/50/100 %, nur höchster Satz, keine Summierung; Fahrtkosten 0,30 €/km). Annahme: 8 bezahlte Std./Schicht, Pause außerhalb des Nachtfensters, Nachtdienste über Tagesgrenzen vereinfacht. AG-Kosten pauschal ~21 %. Fahrtkostenerstattung ist Aufwandsersatz, kein Lohn – steuerfrei nur bei Auswärtstätigkeit/keiner ersten Tätigkeitsstätte (auf Lohnabrechnung prüfen). Ersetzt keine Lohnabrechnung und keine Steuerberatung.</p>
+  <p class="foot">Schätzung nach Tarif 2026 (§32a EStG), SV-Sätzen 2026, Vertrag §3 und §3b EStG. Zuschläge auf tatsächlich geleistete Zeit (8,5 Std./Schicht), Grundlohn auf 40-Std.-Woche (173,33 Std./Monat). Es gilt nur der höchste Zuschlag, keine Summierung (Vertrag §3.3). Nachtdienste an Sonn-/Feiertagen nach §3b Abs. 3 EStG (Zuordnung bis 4 Uhr des Folgetags). AG-Kosten pauschal ~21 %. Fahrtkostenerstattung ist Aufwandsersatz, kein Lohn – steuerfrei nur bei Auswärtstätigkeit ohne erste Tätigkeitsstätte (auf Lohnabrechnung prüfen). Ersetzt keine Lohnabrechnung und keine Steuerberatung.</p>
 </div>
 
 <script>
@@ -178,26 +182,54 @@ function lohnsteuerJahr(j,kls,zu,kinder){
   if(kls===3)return 2*est2026(z/2);
   if(kls===5||kls===6)return est2026(z+12348)-est2026(12348);
   return est2026(z);}
-function zuschlagStunden(typ,tag){
-  if(tag==="feiertag")return[{h:8,pct:100}];
-  if(tag==="sonntag")return[{h:8,pct:50}];
-  if(typ==="frueh")return[];
-  if(typ==="spaet")return[{h:2.5,pct:25}];
-  if(typ==="nacht")return[{h:4,pct:25},{h:4,pct:40}];
-  return[];}
-// bruttoExtra = zusätzlicher steuer-/sv-pflichtiger Betrag (z.B. steuerpflichtige Fahrtkosten),
-// geht NICHT in den Grundlohn/Std. für Zuschläge ein.
-function berechne(grund,zulage,f,s,n,kls,zu,kirche,kinder,bruttoExtra){
+
+// ── Zuschlags-Segmente: Vertrag §3.3 (nur höchster Satz) + §3b Abs.3 EStG ──
+function segs(typ,kind){
+  if(typ==="frueh"){                        // 06:00–14:30, keine Nachtstunden
+    if(kind==="so")return[{h:8.5,pct:50}];
+    if(kind==="ft")return[{h:8.5,pct:100}];
+    if(kind==="hl")return[{h:0.5,pct:100}]; // nur 14:00–14:30 liegt nach 14 Uhr
+    return[];}
+  if(typ==="spaet"){                        // 14:00–22:30, Nacht ab 20:00
+    if(kind==="so")return[{h:8.5,pct:50}];
+    if(kind==="ft")return[{h:8.5,pct:100}];
+    if(kind==="hl")return[{h:8.5,pct:100}];
+    return[{h:2.5,pct:25}];}
+  switch(kind){                             // Nacht 22:00–06:30
+    case "soEnd":   return[{h:2,pct:25},{h:4,pct:50},{h:2,pct:50},{h:0.5,pct:50}];   // Sa→So: ab 0 Uhr Sonntag
+    case "soStart": return[{h:2,pct:50},{h:4,pct:50},{h:2,pct:25}];                  // So→Mo: Sonntag läuft bis 4 Uhr
+    case "ftEnd":   return[{h:2,pct:25},{h:4,pct:100},{h:2,pct:100},{h:0.5,pct:100}];
+    case "ftStart": return[{h:2,pct:100},{h:4,pct:100},{h:2,pct:25}];
+    case "hl":      return[{h:8.5,pct:100}];
+    default:        return[{h:2,pct:25},{h:4,pct:40},{h:2,pct:25}];}
+}
+const SHIFTS=[
+  {k:"f",typ:"frueh",nm:"Frühdienst",sb:"06:00–14:30 · werktags kein Zuschlag",
+   fields:[["so","davon Sonntag"],["ft","davon Feiertag (auch Ft am Sonntag)"],["hl","davon 24./31.12. ab 14 Uhr"]]},
+  {k:"s",typ:"spaet",nm:"Spätdienst",sb:"14:00–22:30 · 2,5 h Nacht à 25 %",
+   fields:[["so","davon Sonntag"],["ft","davon Feiertag (auch Ft am Sonntag)"],["hl","davon 24./31.12. ab 14 Uhr"]]},
+  {k:"n",typ:"nacht",nm:"Nachtdienst",sb:"22:00–06:30 · 25 % + 40 %",
+   fields:[["soEnd","Nacht auf Sonntag (Sa→So)"],["soStart","Nacht ab Sonntag (So→Mo)"],
+           ["ftEnd","Nacht auf Feiertag"],["ftStart","Nacht ab Feiertag"],["hl","ab 24./31.12."]]}
+];
+
+function berechne(grund,zulage,shifts,kls,zu,kirche,kinder,bruttoExtra){
   bruttoExtra=bruttoExtra||0;
   const rb=grund+zulage, gh=rb/STD, cap=Math.min(gh,25);
-  let stf=0,svfrei=0; const det={nacht25:0,nacht40:0,sonntag:0,feiertag:0};
-  for(const[typ,c]of[["frueh",f],["spaet",s],["nacht",n]]){
-    const wt=Math.max(0,c.total-c.so-c.ft);
-    const add=(cnt,tag)=>{for(const seg of zuschlagStunden(typ,tag)){
-      const val=cnt*seg.h*(seg.pct/100)*gh; stf+=val; svfrei+=cnt*seg.h*(seg.pct/100)*cap;
-      if(tag==="feiertag")det.feiertag+=val; else if(tag==="sonntag")det.sonntag+=val;
-      else if(seg.pct===40)det.nacht40+=val; else det.nacht25+=val;}};
-    add(wt,"werktag"); add(c.so,"sonntag"); add(c.ft,"feiertag");}
+  let stf=0,svfrei=0; const det={n25:0,n40:0,so:0,ft:0};
+  for(const def of SHIFTS){
+    const c=shifts[def.k];
+    const spez=def.fields.reduce((a,[fk])=>a+(c[fk]||0),0);
+    const werktag=Math.max(0,(c.total||0)-spez);
+    const add=(cnt,kind)=>{ if(!cnt)return;
+      for(const sg of segs(def.typ,kind)){
+        const val=cnt*sg.h*(sg.pct/100)*gh;
+        stf+=val; svfrei+=cnt*sg.h*(sg.pct/100)*cap;
+        if(sg.pct===100)det.ft+=val; else if(sg.pct===50)det.so+=val;
+        else if(sg.pct===40)det.n40+=val; else det.n25+=val;}};
+    add(werktag,"werktag");
+    def.fields.forEach(([fk])=>add(c[fk]||0,fk));
+  }
   const svp=Math.max(0,stf-svfrei), r=svRates(zu,kinder), svSatz=r.KV+r.PV+r.RV+r.AV;
   const svBrutto=rb+bruttoExtra;
   const svBasis=Math.min(svBrutto,BBG_KV)*(r.KV+r.PV)+Math.min(svBrutto,BBG_RV)*(r.RV+r.AV);
@@ -213,46 +245,47 @@ function berechne(grund,zulage,f,s,n,kls,zu,kirche,kinder,bruttoExtra){
 // ── State ──
 const st={vergleich:false,grund:4000,zulage:300,grundB:4200,zulageB:300,
   kls:4,zusatz:2.69,kirche:false,kinder:false,
-  f:{total:11,so:0,ft:0},s:{total:11,so:0,ft:0},n:{total:0,so:0,ft:0},
+  shifts:{f:{total:11,so:0,ft:0,hl:0},s:{total:11,so:0,ft:0,hl:0},
+          n:{total:0,soEnd:0,soStart:0,ftEnd:0,ftStart:0,hl:0}},
   fahrt:true,fahrtSatz:0.30,fahrtSteuerfrei:true,
   routen:[{name:"MöBa / Mörlenbach",km:20,fahrten:10},{name:"Gernsheim",km:28,fahrten:5}]};
 
-// ── Schicht-Zeilen ──
-const shiftDefs=[["f","Frühdienst","06:00–14:30 · kein Zuschlag werktags"],
-  ["s","Spätdienst","14:00–22:30 · 2,5 h à 25 %"],
-  ["n","Nachtdienst","22:00–06:30 · 25 % + 40 %"]];
+// ── Schichtblöcke bauen ──
 const shiftsEl=document.getElementById("shifts");
-shiftDefs.forEach(([key,nm,sb])=>{
-  const row=document.createElement("div"); row.className="shiftrow";
-  row.innerHTML=`<div><div class="nm">${nm}</div><div class="sb">${sb}</div></div>
-    <div class="cells">${["total","so","ft"].map(fld=>`<div class="c"><input class="cell" type="number" min="0" data-k="${key}" data-f="${fld}"><div class="clab">${fld==="total"?"gesamt":fld==="so"?"So":"Ft"}</div></div>`).join("")}</div>`;
-  shiftsEl.appendChild(row);
+SHIFTS.forEach(def=>{
+  const b=document.createElement("div"); b.className="sblock";
+  b.innerHTML=`<div class="shead">
+      <div><div class="nm">${def.nm}</div><div class="sb">${def.sb}</div></div>
+      <div class="cw"><input class="cell" type="number" min="0" data-k="${def.k}" data-f="total"><div class="clab">gesamt</div></div>
+    </div>
+    ${def.fields.map(([fk,lbl])=>`<div class="srow"><span class="sl">${lbl}</span>
+      <input class="cell" type="number" min="0" data-k="${def.k}" data-f="${fk}"></div>`).join("")}
+    <div class="warnbox" id="warn-${def.k}" style="display:none"></div>`;
+  shiftsEl.appendChild(b);
 });
 
-// ── Routen-Zeilen (Fahrtkosten) ──
+// ── Routen ──
 const routenEl=document.getElementById("routen");
 st.routen.forEach((rt,i)=>{
-  const row=document.createElement("div"); row.className="shiftrow";
-  row.innerHTML=`<div><div class="nm">${rt.name}</div><div class="sb">einfache Strecke × Fahrten</div></div>
-    <div class="cells">
-      <div class="c"><input class="cell" type="number" min="0" data-r="${i}" data-rf="km"><div class="clab">km einf.</div></div>
-      <div class="c"><input class="cell" type="number" min="0" data-r="${i}" data-rf="fahrten"><div class="clab">Fahrten</div></div>
-    </div>`;
+  const row=document.createElement("div"); row.className="sblock";
+  row.innerHTML=`<div class="shead"><div><div class="nm">${rt.name}</div><div class="sb">einfache Strecke × Fahrten</div></div>
+    <div style="display:flex;gap:8px">
+      <div class="cw"><input class="cell" type="number" min="0" data-r="${i}" data-rf="km"><div class="clab">km einf.</div></div>
+      <div class="cw"><input class="cell" type="number" min="0" data-r="${i}" data-rf="fahrten"><div class="clab">Fahrten</div></div>
+    </div></div>`;
   routenEl.appendChild(row);
 });
 
 // ── Verdrahtung ──
 const $=id=>document.getElementById(id);
 function bindNum(id,key){const el=$(id);el.value=st[key];el.addEventListener("input",()=>{st[key]=el.value===""?0:parseFloat(el.value);render();});}
-bindNum("grund","grund");bindNum("zulage","zulage");
+["grund","zulage","grundB","zulageB","zusatz","fahrtSatz"].forEach(k=>bindNum(k,k));
 bindNum("grundA","grund");bindNum("zulageA","zulage");
-bindNum("grundB","grundB");bindNum("zulageB","zulageB");
-bindNum("zusatz","zusatz");bindNum("fahrtSatz","fahrtSatz");
 $("kls").value=st.kls;
 $("kls").addEventListener("change",()=>{st.kls=parseInt($("kls").value);$("klsHint").style.display=(st.kls===5||st.kls===6)?"block":"none";render();});
 document.querySelectorAll("input.cell[data-k]").forEach(el=>{
-  const k=el.dataset.k,fl=el.dataset.f; el.value=st[k][fl];
-  el.addEventListener("input",()=>{st[k][fl]=Math.max(0,parseInt(el.value||"0"));render();});});
+  const k=el.dataset.k,fl=el.dataset.f; el.value=st.shifts[k][fl];
+  el.addEventListener("input",()=>{st.shifts[k][fl]=Math.max(0,parseInt(el.value||"0"));render();});});
 document.querySelectorAll("input.cell[data-r]").forEach(el=>{
   const i=+el.dataset.r,fl=el.dataset.rf; el.value=st.routen[i][fl];
   el.addEventListener("input",()=>{st.routen[i][fl]=Math.max(0,parseFloat(el.value||"0"));render();});});
@@ -266,19 +299,33 @@ bindTog("togKinder","swKinder","kinder");
 bindTog("togFahrt","swFahrt","fahrt",()=>{$("fahrtBody").style.display=st.fahrt?"block":"none";});
 bindTog("togSteuerfrei","swSteuerfrei","fahrtSteuerfrei");
 
-// ── Fahrtkosten-Helfer ──
+// ── Plausiprüfung ──
+function pruefe(){
+  let ok=true;
+  SHIFTS.forEach(def=>{
+    const c=st.shifts[def.k];
+    const spez=def.fields.reduce((a,[fk])=>a+(c[fk]||0),0);
+    const box=$("warn-"+def.k), zuviel=spez>(c.total||0);
+    if(zuviel){ok=false;
+      box.style.display="block";
+      box.textContent=`${def.nm}: ${spez} Zuschlagstage eingetragen, aber nur ${c.total||0} Dienste gesamt. Bitte „gesamt" erhöhen – sonst wird zu viel gerechnet.`;
+    } else box.style.display="none";
+    document.querySelectorAll(`input.cell[data-k="${def.k}"]`).forEach(el=>el.classList.toggle("warn",zuviel));
+  });
+  return ok;
+}
+
+// ── Fahrtkosten ──
 function fahrtDetail(){return st.routen.map(rt=>({name:rt.name,km:rt.km*2*rt.fahrten,betrag:rt.km*2*rt.fahrten*st.fahrtSatz}));}
 function fahrtGesamt(){return st.fahrt?fahrtDetail().reduce((a,x)=>a+x.betrag,0):0;}
-// Netto-Zufluss der Fahrtkosten für ein gegebenes Gehalt
-function fahrtNettoFor(grund,zulage){
-  const g=fahrtGesamt(); if(g===0)return 0;
-  if(st.fahrtSteuerfrei)return g;
-  const a0=berechne(grund,zulage,st.f,st.s,st.n,st.kls,st.zusatz,st.kirche,st.kinder,0);
-  const a1=berechne(grund,zulage,st.f,st.s,st.n,st.kls,st.zusatz,st.kirche,st.kinder,g);
+function fahrtNettoFor(g,z){
+  const ges=fahrtGesamt(); if(ges===0)return 0;
+  if(st.fahrtSteuerfrei)return ges;
+  const a0=berechne(g,z,st.shifts,st.kls,st.zusatz,st.kirche,st.kinder,0);
+  const a1=berechne(g,z,st.shifts,st.kls,st.zusatz,st.kirche,st.kinder,ges);
   return a1.netto-a0.netto;}
 
 // ── Render ──
-const klsNames={1:"I – ledig",2:"II – alleinerziehend",3:"III – verheiratet, höher",4:"IV – verheiratet, gleich",5:"V – verheiratet, geringer",6:"VI – Zweitjob"};
 function barHTML(r){const t=r.netto+r.sv+r.steuerGes||1;const p=v=>(v/t*100)+"%";
   return `<div class="bar"><div style="width:${p(r.netto)};background:#0E7C6B"></div><div style="width:${p(r.sv)};background:var(--sv)"></div><div style="width:${p(r.steuerGes)};background:var(--steuer)"></div></div>
   <div class="leg"><span><i class="dot" style="background:#0E7C6B"></i>Netto</span><span><i class="dot" style="background:var(--sv)"></i>Sozialabgaben</span><span><i class="dot" style="background:var(--steuer)"></i>Steuer</span></div>`;}
@@ -289,32 +336,30 @@ function grundlohnHTML(r){const u=r.gh>25;
       :`— unter der 25-€-Grenze. Deine Zuschläge sind komplett steuer- <i>und</i> sozialabgabenfrei.`}</div></section>`;}
 function fahrtHTML(){
   if(!st.fahrt||fahrtGesamt()===0)return "";
-  const d=fahrtDetail();
-  const rows=d.map(x=>`<div class="sub"><span class="l">${x.name} · ${x.km} km</span><span class="v">${eur(x.betrag)}</span></div>`).join("");
-  const g=fahrtGesamt(), steuerHinweis=st.fahrtSteuerfrei?"steuerfrei":"steuerpflichtig";
+  const rows=fahrtDetail().map(x=>`<div class="sub"><span class="l">${x.name} · ${x.km} km</span><span class="v">${eur(x.betrag)}</span></div>`).join("");
+  const g=fahrtGesamt();
   return `<section class="card" style="margin-top:16px;border-left:3px solid var(--fahrt)">
-    <h2>Fahrtkosten (${steuerHinweis})</h2>
-    ${rows}
+    <h2>Fahrtkosten (${st.fahrtSteuerfrei?"steuerfrei":"steuerpflichtig"})</h2>${rows}
     <div style="border-top:1px solid var(--line);margin:6px 0"></div>
     <div class="row s"><span class="l">Erstattung gesamt</span><span class="v" style="color:var(--fahrt)">${eur(g)}</span></div>
     ${!st.fahrtSteuerfrei?`<div class="hint" style="color:var(--sv)">Als Bruttolohn versteuert – netto kommen davon nur ${eur(fahrtNettoFor(st.grund,st.zulage))} an.</div>`:""}
   </section>`;}
 
 function render(){
-  const A=berechne(st.grund,st.zulage,st.f,st.s,st.n,st.kls,st.zusatz,st.kirche,st.kinder,0);
-  const B=berechne(st.grundB,st.zulageB,st.f,st.s,st.n,st.kls,st.zusatz,st.kirche,st.kinder,0);
+  pruefe();
+  const A=berechne(st.grund,st.zulage,st.shifts,st.kls,st.zusatz,st.kirche,st.kinder,0);
+  const B=berechne(st.grundB,st.zulageB,st.shifts,st.kls,st.zusatz,st.kirche,st.kinder,0);
   const erg=$("erg");
   if(!st.vergleich){
     const fN=fahrtNettoFor(st.grund,st.zulage), konto=A.netto+fN;
-    const subs=[["Nacht 25 %",A.det.nacht25],["Nacht 40 % (0–4 Uhr)",A.det.nacht40],["Sonntag 50 %",A.det.sonntag],["Feiertag 100 %",A.det.feiertag]]
-      .filter(x=>x[1]>0).map(x=>`<div class="sub"><span class="l">${x[0]}</span><span class="v">${eur(x[1])}</span></div>`).join("");
-    const kontoZeile=fN>0?`<div class="subtxt">+ ${eur(fN)} Fahrtkosten${st.fahrtSteuerfrei?" (steuerfrei)":""} → <b style="color:#fff">${eur(konto)}</b> auf dem Konto</div>`:"";
+    const subs=[["Nacht 25 %",A.det.n25],["Nacht 40 % (0–4 Uhr)",A.det.n40],["Sonntag 50 %",A.det.so],["Feiertag 100 %",A.det.ft]]
+      .filter(x=>x[1]>0.005).map(x=>`<div class="sub"><span class="l">${x[0]}</span><span class="v">${eur(x[1])}</span></div>`).join("");
     erg.innerHTML=`
       <section class="card hero">
         <div class="cap">Netto im Monat</div>
         <div class="big">${eur(A.netto)}</div>
         <div class="subtxt">aus ${eur0(A.gesamt)} Gesamtbrutto · davon ${eur0(A.stf)} steuerfrei</div>
-        ${kontoZeile}
+        ${fN>0?`<div class="subtxt">+ ${eur(fN)} Fahrtkosten${st.fahrtSteuerfrei?" (steuerfrei)":""} → <b style="color:#fff">${eur(konto)}</b> auf dem Konto</div>`:""}
         ${barHTML(A)}
       </section>
       <section class="card" style="margin-top:16px">
@@ -324,15 +369,14 @@ function render(){
         <div class="row"><span class="l">− Lohnsteuer${st.kirche?" + Kirche":""}${A.soli>0?" + Soli":""}</span><span class="v" style="color:var(--steuer)">−${eur(A.steuerGes)}</span></div>
         <div style="border-top:1px solid var(--line);margin:6px 0"></div>
         <div class="row s"><span class="l">+ Steuerfreie Zuschläge</span><span class="v" style="color:var(--accent)">+${eur(A.stf)}</span></div>
-        <div style="padding-left:12px">${subs||'<div class="sub"><span class="l">keine (nur Frühdienste?)</span><span class="v">—</span></div>'}</div>
+        <div style="padding-left:12px">${subs||'<div class="sub"><span class="l">keine Zuschlagsstunden</span><span class="v">—</span></div>'}</div>
         <div style="border-top:2px solid var(--ink);margin:8px 0 2px"></div>
         <div class="row s"><span class="l">= Netto (Lohn)</span><span class="v" style="color:var(--accent)">${eur(A.netto)}</span></div>
       </section>
       ${fahrtHTML()}
       ${fN>0?`<section class="card" style="margin-top:16px;background:var(--posBg);border:1px solid #BFDDD5">
-        <div class="row s"><span class="l">Auf dem Konto gesamt</span><span class="v" style="color:var(--ink)">${eur(konto)}</span></div>
-        <div class="hint">Netto-Lohn ${eur(A.netto)} + Fahrtkosten ${eur(fN)}. Die Fahrtkosten sind Aufwandsersatz – kein Verdienst.</div>
-      </section>`:""}
+        <div class="row s"><span class="l">Auf dem Konto gesamt</span><span class="v">${eur(konto)}</span></div>
+        <div class="hint">Netto-Lohn ${eur(A.netto)} + Fahrtkosten ${eur(fN)}. Fahrtkosten sind Aufwandsersatz – kein Verdienst.</div></section>`:""}
       ${grundlohnHTML(A)}`;
   }else{
     const dB=B.rb-A.rb, dN=B.netto-A.netto, q=dB!==0?dN/dB*100:0, ag=dB*(1+AG_SV);
@@ -342,8 +386,6 @@ function render(){
       <td class="r" style="color:${strong?"var(--ink)":col||"var(--ink)"};font-weight:${strong?600:500}">${eur(b)}</td>
       <td class="r" style="color:${d>=0?"var(--accent)":"var(--steuer)"};font-weight:600">${d>=0?"+":"−"}${eur(Math.abs(d))}</td></tr>`;};
     const g=fahrtGesamt();
-    const fahrtNote=st.fahrt&&g>0?`<section class="card" style="margin-top:16px;border-left:3px solid var(--fahrt)">
-      <div style="font-size:13px;line-height:1.5"><b>Fahrtkosten:</b> ${eur(g)}/Monat${st.fahrtSteuerfrei?" (steuerfrei)":" (steuerpflichtig)"} kommen bei beiden Stufen gleich dazu und ändern die Differenz nicht – deshalb hier ausgeblendet, um den Gehaltsvergleich sauber zu halten.</div></section>`:"";
     erg.innerHTML=`
       <section class="card hero">
         <div class="cap">Mehr netto im Monat</div>
@@ -367,9 +409,10 @@ function render(){
         </tbody></table>
       </section>
       <section class="card" style="margin-top:16px;background:var(--posBg);border:1px solid #BFDDD5">
-        <div style="font-size:13px;line-height:1.55"><b>Für die Verhandlung:</b> Die Erhöhung von ${eur(dB)} brutto kostet den Arbeitgeber real ca. <b>${eur(ag)}/Monat</b> (inkl. ~21 % AG-Sozialabgaben). Bei dir ankommen: ${eur(dN)} netto. Die Lücke dazwischen ist Steuer + SV – kein „verlorenes" Geld, sondern Renten-, Kranken- und Arbeitslosenversicherung.</div>
+        <div style="font-size:13px;line-height:1.55"><b>Für die Verhandlung:</b> Die Erhöhung von ${eur(dB)} brutto kostet den Arbeitgeber real ca. <b>${eur(ag)}/Monat</b> (inkl. ~21 % AG-Sozialabgaben). Bei dir ankommen: ${eur(dN)} netto.</div>
       </section>
-      ${fahrtNote}
+      ${g>0?`<section class="card" style="margin-top:16px;border-left:3px solid var(--fahrt)">
+        <div style="font-size:13px;line-height:1.5"><b>Fahrtkosten:</b> ${eur(g)}/Monat kommen bei beiden Stufen gleich dazu und ändern die Differenz nicht – deshalb hier ausgeblendet.</div></section>`:""}
       ${grundlohnHTML(B)}`;
   }
 }

@@ -1,6 +1,6 @@
 // Service Worker v3 – Netzwerk-first für die Seite (online immer frisch),
 // Cache-first für Assets, Offline-Fallback aus Cache.
-const CACHE = "schicht-netto-v3";
+const CACHE = "schicht-netto-v4";
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", (e) => {
