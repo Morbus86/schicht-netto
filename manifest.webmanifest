@@ -1,18 +1,16 @@
 {
-  "name": "Dienstplan → Kalender",
-  "short_name": "Dienstplan",
-  "description": "Dienstplan hochladen, prüfen und in den Kalender Fam.Berg eintragen.",
+  "name": "Schicht-Netto-Rechner",
+  "short_name": "Schicht-Netto",
+  "description": "Nettogehalt inkl. steuerfreier Nacht-, Sonntags- und Feiertagszuschläge – BaBella-Vertrag.",
+  "lang": "de",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#EEF2F4",
-  "theme_color": "#16202B",
-  "lang": "de",
+  "background_color": "#E9ECEA",
+  "theme_color": "#E9ECEA",
   "icons": [
-    { "src": "icon.svg",     "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ]
 }
