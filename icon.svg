@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Dienstplan">
+  <rect width="512" height="512" rx="112" fill="#16202B"/>
+  <g>
+    <rect x="112" y="150" width="52"  height="40" rx="10" fill="#F6BF26"/>
+    <rect x="184" y="150" width="216" height="40" rx="10" fill="#FFFFFF" opacity="0.90"/>
+
+    <rect x="112" y="236" width="52"  height="40" rx="10" fill="#0B8043"/>
+    <rect x="184" y="236" width="164" height="40" rx="10" fill="#FFFFFF" opacity="0.62"/>
+
+    <rect x="112" y="322" width="52"  height="40" rx="10" fill="#F4511E"/>
+    <rect x="184" y="322" width="196" height="40" rx="10" fill="#FFFFFF" opacity="0.62"/>
+  </g>
+</svg>
